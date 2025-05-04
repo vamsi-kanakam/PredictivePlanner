@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Project Details - {{ project.project_title }}{% endblock %}
+{% block content %}
+<div class="project-detail-container">
+    <h2 class="project-title">{{ project.project_title }}</h2>
+    <p class="project-subtitle">Detailed information about your project.</p>
+
+    <!-- Project Overview -->
+    <div class="project-detail-card">
+        <h3>Project Overview</h3>
+        <p><strong>Project Description:</strong> {{ project.project_description|default:"N/A" }}</p>
+        <p><strong>Type:</strong> {{ project.project_type|default:"N/A" }}</p>
+        <p><strong>Planned Budget:</strong> ${{ project.planned_budget|default:"N/A" }}</p>
+        <!--<p><strong>Actual Budget:</strong> ${{ project.actual_budget|default:"N/A" }}</p> -->
+        <p><strong>Planned Schedule (Days):</strong> {{ project.planned_schedule|default:"N/A" }}</p>
+        <!-- <p><strong>Actual Schedule (Days):</strong> {{ project.actual_schedule|default:"N/A" }}</p> -->
+        <p><strong>Planned Scope:</strong> {{ project.planned_scope|default:"N/A" }}</p>
+        <!-- <p><strong>Actual Scope:</strong> {{ project.actual_scope|default:"N/A" }}</p> -->
+        <p><strong>Project Manager Title:</strong> {{ project.project_manager_title|default:"N/A" }}</p>
+        <p><strong>Project Manager Skill Level:</strong> {{ project.project_manager_skill_level|default:"N/A" }}</p>
+        <!-- <p><strong>Project Info Score:</strong> {{ project.project_info_score|default:"N/A" }}</p>
+        <p><strong>Resource Utilization Score:</strong> {{ project.resource_utilization_score|default:"N/A" }}</p>
+        <p><strong>Total Score:</strong> {{ project.total_score|default:"N/A" }}</p> -->
+        <p><strong>Created:</strong> {{ project.created_at|date:"F d, Y"|default:"N/A" }}</p>
+        <p><strong>Updated:</strong> {{ project.updated_at|date:"F d, Y"|default:"N/A" }}</p>
+    </div>
+
+    <!-- Team Composition -->
+    <div class="project-detail-card">
+        <h3>Team Composition</h3>
+        <p><strong>Team Size:</strong> {{ project.team_composition.team_size|default:"N/A" }}</p>
+        <p><strong>Average Experience Level:</strong> {{ project.team_composition.avg_experience_level|default:"N/A" }}</p>
+        <p><strong>Senior-to-Junior Ratio:</strong> {{ project.team_composition.senior_to_junior_ratio|default:"N/A" }}</p>
+        <!-- <p><strong>Stability Score:</strong> {{ project.team_composition.stability_score|default:"N/A" }}</p> -->
+    </div>
+
+    <!-- Productivity Efficiency -->
+    <div class="project-detail-card">
+        <h3>Productivity Efficiency</h3>
+        <p><strong>Expected Sprint Completion Rate (%):</strong> {{ project.productivity_efficiency.expected_sprint_completion_rate|default:"N/A" }}</p>
+        <p><strong>Task Completion Rate (%):</strong> {{ project.productivity_efficiency.task_completion_rate|default:"N/A" }}</p>
+        <p><strong>Expected Velocity (Story Points/Sprint):</strong> {{ project.productivity_efficiency.expected_velocity|default:"N/A" }}</p>
+        <p><strong>Estimated Cycle Time (Days):</strong> {{ project.productivity_efficiency.estimated_cycle_time|default:"N/A" }}</p>
+        <p><strong>Defect Rate (Defects/1000 Lines):</strong> {{ project.productivity_efficiency.defect_rate|default:"N/A" }}</p>
+        <p><strong>Dependencies Blocked:</strong> {{ project.productivity_efficiency.dependencies_blocked|default:"N/A" }}</p>
+        <!-- <p><strong>Productivity Score:</strong> {{ project.productivity_efficiency.productivity_score|default:"N/A" }}</p> -->
+    </div>
+
+    <!-- Project Environment -->
+    <div class="project-detail-card">
+        <h3>Project Environment</h3>
+        <p><strong>Leadership Support:</strong> {{ project.project_environment.leadership_support|default:"N/A" }}</p>
+        <p><strong>Team Collaboration Level (Score/10):</strong> {{ project.project_environment.team_collaboration_level|default:"N/A" }}</p>
+        <p><strong>Stakeholder Engagement:</strong> {{ project.project_environment.stakeholder_engagement|default:"N/A" }}</p>
+        <p><strong>Work-Life Balance:</strong> {{ project.project_environment.work_life_balance|default:"N/A" }}</p>
+        <p><strong>Psychological Safety Score:</strong> {{ project.project_environment.psychological_safety_score|default:"N/A" }}</p>
+        <p><strong>Resource Availability:</strong> {{ project.project_environment.resource_availability|default:"N/A" }}</p>
+        <p><strong>Turnover Rate (%):</strong> {{ project.project_environment.turnover_rate|default:"N/A" }}</p>
+        <!-- <p><strong>Environment Score:</strong> {{ project.project_environment.environment_score|default:"N/A" }}</p> -->
+    </div>
+
+    <!-- Technical Practices -->
+    <div class="project-detail-card">
+        <h3>Technical Practices</h3>
+        <p><strong>Development Methodology:</strong> {{ project.technical_practices.development_methodology|default:"N/A" }}</p>
+        <p><strong>DevOps Adoption:</strong> {{ project.technical_practices.devops_adoption|yesno:"Yes,No,N/A" }}</p>
+        <p><strong>Automated Testing Coverage (%):</strong> {{ project.technical_practices.automated_testing_coverage|default:"N/A" }}</p>
+        <p><strong>CI/CD Pipeline Usage:</strong> {{ project.technical_practices.cicd_pipeline_usage|yesno:"Yes,No,N/A" }}</p>
+        <p><strong>Code Review Process:</strong> {{ project.technical_practices.code_review_process|default:"N/A" }}</p>
+        <p><strong>Technical Debt Level:</strong> {{ project.technical_practices.technical_debt_level|default:"N/A" }}</p>
+        <p><strong>Cloud-Based Development:</strong> {{ project.technical_practices.cloud_based_development|yesno:"Yes,No,N/A" }}</p>
+        <p><strong>Security Practices:</strong> {{ project.technical_practices.security_practices|default:"N/A" }}</p>
+        <!-- <p><strong>Technical Score:</strong> {{ project.technical_practices.technical_score|default:"N/A" }}</p> -->
+    </div>
+
+    <div class="project-detail-actions">
+        <a href="{% url 'project' %}" class="btn btn-outline">Back to Projects</a>
+    </div>
+</div>
+{% endblock %}

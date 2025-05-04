@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% block title %}Analytics Page{% endblock %}
+{% block content %}
+
+
+<div class="analytics-container" >
+    <script>
+        
+    function skeletonLoading(){
+        
+        document.getElementById('skeleton-loader').style.display = 'block';
+        document.getElementById('analytics_container').style.display = 'none';
+
+    }
+    </script>
+    <div id="skeleton-loader" style="display: none;">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-overview">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+        <div class="skeleton-chart"></div>
+        <div class="skeleton-chart"></div>
+        <div class="skeleton-projects">
+          <div class="skeleton-project-card"></div>
+          <div class="skeleton-project-card"></div>
+        </div>
+      </div>
+      
+      <div id="analytics_container">
+        <div class="analytics-header">
+            <h2 class="analytics-title">Analytics Page</h2>
+        </div>
+        <p class="analytics-subtitle">Real-time analytics for your projects in Project Predictor AI.</p>
+
+        <!-- Overview Section -->
+        <div class="analytics-overview">
+            <h3>Overview</h3>
+            <div class="overview-cards">
+                <div class="overview-card">
+                    <h4>Total Projects</h4>
+                    <p id="total-projects">{{ total_projects }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Success Projects</h4>
+                    <p id="success-projects">{{ success_projects }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Failing Projects</h4>
+                    <p id="failed-projects">{{ failed_projects }}</p>
+                </div>
+                <div style="display:none">
+                <div class="overview-card">
+                    <h4>Average Total Score</h4>
+                    <p id="avg-total-score">{{ avg_total_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Project Info Score</h4>
+                    <p id="avg-project-info-score">{{ avg_project_info_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Resource Utilization Score</h4>
+                    <p id="avg-resource-utilization-score">{{ avg_resource_utilization_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Stability Score</h4>
+                    <p id="avg-stability-score">{{ avg_stability_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Productivity Score</h4>
+                    <p id="avg-productivity-score">{{ avg_productivity_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Risk Score</h4>
+                    <p id="avg-risk-score">{{ avg_risk_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Environment Score</h4>
+                    <p id="avg-environment-score">{{ avg_environment_score }}</p>
+                </div>
+                <div class="overview-card">
+                    <h4>Average Technical Score</h4>
+                    <p id="avg-technical-score">{{ avg_technical_score }}</p>
+                </div>
+                </div>
+            </div>
+            <!-- Bar Chart for Average Scores -->
+            <center>
+                <h3>Average Scores</h3>
+
+                <div class="chart-container">
+                    <canvas id="averageScoresChart"></canvas>
+                </div>
+            </center>
+    
+            <!-- Trends Over Time Section -->
+            <center>
+                <h3>Trends Over Time</h3>
+
+                <div class="chart-container">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </center>
+        </div>
+        
+
+        <!-- Detailed Project Analytics -->
+        <div class="analytics-details">
+            <h3>Project Analytics</h3>
+            <div class="project-list" id="project-list">
+                {% for project in projects %}
+                <div class="project-card" data-project-id="{{ project.id }}">
+                    <div class="project-info">
+                        <div style="display: flex; align-items: center;">
+                        <h4>{{ project.project_title }}</h4>
+                        <h5>&nbsp; | &nbsp;</h5>
+                        {% if project.total_score >= 6 %}
+                            <h5 class="text-success">Success</h5> 
+                            {% else %}
+                            <h5 class="text-warning">Failing</h5> 
+                            {% endif %}
+                        
+                        </div>
+                        <div style="display: none;">
+                        <p><strong>Total Score:</strong> <span class="total-score">{{ project.total_score|default:"N/A" }}</span></p>
+                        <p><strong>Project Info Score:</strong> <span class="project-info-score">{{ project.project_info_score|default:"N/A" }}</span></p>
+                        <p><strong>Resource Utilization Score:</strong> <span class="resource-utilization-score">{{ project.resource_utilization_score|default:"N/A" }}</span></p>
+                        <p><strong>Stability Score:</strong> <span class="stability-score">{{ project.team_composition.stability_score|default:"N/A" }}</span></p>
+                        <p><strong>Productivity Score:</strong> <span class="productivity-score">{{ project.productivity_efficiency.productivity_score|default:"N/A" }}</span></p>
+                        <p><strong>Risk Score:</strong> <span class="risk-score">{{ project.risk.final_risk_score|default:"N/A" }}</span></p>
+                        <p><strong>Environment Score:</strong> <span class="environment-score">{{ project.project_environment.environment_score|default:"N/A" }}</span></p>
+                        <p><strong>Technical Score:</strong> <span class="technical-score">{{ project.technical_practices.technical_score|default:"N/A" }}</span></p>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <a href="{% url 'generate_report' project.id %}" class="btn btn-outline" onclick="skeletonLoading()">Generate Report</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="no-projects" id="no-projects">No projects found. Add a new project to see analytics!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // Initialize Chart.js charts
+    let averageScoresChart, trendsChart;
+
+    function initializeCharts(data) {
+        // Bar Chart for Average Scores
+        const avgScoresCtx = document.getElementById('averageScoresChart').getContext('2d');
+        if (averageScoresChart) {
+            averageScoresChart.destroy();
+        }
+        averageScoresChart = new Chart(avgScoresCtx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    'Total Score',
+                    'Project Info',
+                    'Resource Utilization',
+                    'Stability',
+                    'Productivity',
+                    'Risk',
+                    'Environment',
+                    'Technical'
+                ],
+                datasets: [{
+                    label: 'Average Scores',
+                    data: [
+                        data.avg_total_score,
+                        data.avg_project_info_score,
+                        data.avg_resource_utilization_score,
+                        data.avg_stability_score,
+                        data.avg_productivity_score,
+                        data.avg_risk_score,
+                        data.avg_environment_score,
+                        data.avg_technical_score
+                    ],
+                    backgroundColor: 'rgba(107, 72, 255, 0.6)',
+                    borderColor: '#6b48ff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Score (0-10)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Line Chart for Trends Over Time
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        if (trendsChart) {
+            trendsChart.destroy();
+        }
+        const projectData = data.projects;
+        const labels = projectData.map(project => project.project_title);
+        const totalScores = projectData.map(project => project.total_score !== "N/A" ? project.total_score : null);
+
+        trendsChart = new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Score Over Time',
+                    data: totalScores,
+                    borderColor: '#6b48ff',
+                    backgroundColor: 'rgba(107, 72, 255, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Project Name'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Score (0-10)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function fetchAnalyticsData() {
+        fetch("{% url 'analytics_api' %}")
+            .then(response => response.json())
+            .then(data => {
+                // Update Overview Section
+                document.getElementById('total-projects').textContent = data.total_projects;
+                document.getElementById('avg-total-score').textContent = data.avg_total_score;
+                document.getElementById('avg-project-info-score').textContent = data.avg_project_info_score;
+                document.getElementById('avg-resource-utilization-score').textContent = data.avg_resource_utilization_score;
+                document.getElementById('avg-stability-score').textContent = data.avg_stability_score;
+                document.getElementById('avg-productivity-score').textContent = data.avg_productivity_score;
+                document.getElementById('avg-risk-score').textContent = data.avg_risk_score;
+                document.getElementById('avg-environment-score').textContent = data.avg_environment_score;
+                document.getElementById('avg-technical-score').textContent = data.avg_technical_score;
+
+                document.getElementById('success-projects').textContent = data.success_projects;
+                document.getElementById('failed-projects').textContent = data.failed_projects;
+
+                // Update Project Analytics Section
+                const projectList = document.getElementById('project-list');
+                const noProjectsMessage = document.getElementById('no-projects');
+
+                if (data.total_projects === 0) {
+                    if (!noProjectsMessage) {
+                        const noProjectsP = document.createElement('p');
+                        noProjectsP.id = 'no-projects';
+                        noProjectsP.className = 'no-projects';
+                        noProjectsP.textContent = 'No projects found. Add a new project to see analytics!';
+                        projectList.appendChild(noProjectsP);
+                    }
+                    projectList.querySelectorAll('.project-card').forEach(card => card.remove());
+                } else {
+                    if (noProjectsMessage) {
+                        noProjectsMessage.remove();
+                    }
+
+                    // Update existing project cards or add new ones
+                    const existingProjectIds = new Set(
+                        Array.from(projectList.querySelectorAll('.project-card')).map(card => parseInt(card.dataset.projectId))
+                    );
+                    data.projects.forEach(project => {
+                        if (existingProjectIds.has(project.id)) {
+                            // Update existing project card
+                            const card = projectList.querySelector(`.project-card[data-project-id="${project.id}"]`);
+                            card.querySelector('.total-score').textContent = project.total_score;
+                            card.querySelector('.project-info-score').textContent = project.project_info_score;
+                            card.querySelector('.resource-utilization-score').textContent = project.resource_utilization_score;
+                            card.querySelector('.stability-score').textContent = project.stability_score;
+                            card.querySelector('.productivity-score').textContent = project.productivity_score;
+                            card.querySelector('.risk-score').textContent = project.risk_score;
+                            card.querySelector('.environment-score').textContent = project.environment_score;
+                            card.querySelector('.technical-score').textContent = project.technical_score;
+                        } else {
+                            // Add new project card
+                            const projectCard = document.createElement('div');
+                            projectCard.className = 'project-card';
+                            projectCard.dataset.projectId = project.id;
+                            projectCard.innerHTML = `
+                                <div class="project-info">
+                                    <h3>${project.project_title}</h3>
+                                    <p><strong>Total Score:</strong> <span class="total-score">${project.total_score}</span></p>
+                                    <p><strong>Project Info Score:</strong> <span class="project-info-score">${project.project_info_score}</span></p>
+                                    <p><strong>Resource Utilization Score:</strong> <span class="resource-utilization-score">${project.resource_utilization_score}</span></p>
+                                    <p><strong>Stability Score:</strong> <span class="stability-score">${project.stability_score}</span></p>
+                                    <p><strong>Productivity Score:</strong> <span class="productivity-score">${project.productivity_score}</span></p>
+                                    <p><strong>Risk Score:</strong> <span class="risk-score">${project.risk_score}</span></p>
+                                    <p><strong>Environment Score:</strong> <span class="environment-score">${project.environment_score}</span></p>
+                                    <p><strong>Technical Score:</strong> <span class="technical-score">${project.technical_score}</span></p>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="/project/${project.id}/" class="btn btn-outline">View Details</a>
+                                </div>
+                            `;
+                            projectList.appendChild(projectCard);
+                        }
+                    });
+
+                    // Remove project cards that no longer exist
+                    projectList.querySelectorAll('.project-card').forEach(card => {
+                        const projectId = parseInt(card.dataset.projectId);
+                        if (!data.projects.some(project => project.id === projectId)) {
+                            card.remove();
+                        }
+                    });
+                }
+
+                // Update Charts
+                initializeCharts(data);
+            })
+            .catch(error => console.error('Error fetching analytics data:', error));
+    }
+
+    // Fetch data initially and then every 10 seconds
+    fetchAnalyticsData();
+    setInterval(fetchAnalyticsData, 10000); // Poll every 10 seconds
+</script>
+{% endblock %}

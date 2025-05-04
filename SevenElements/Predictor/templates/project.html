@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Project Page{% endblock %}
+{% block content %}
+<div class="project-container">
+    <div class="project-header">
+        <h2 class="project-title">Project Page</h2>
+        <a href="{% url 'add_project' %}" class="btn btn-gradient">Add New Project</a>
+    </div>
+    <p class="project-subtitle">Here are the projects you have added for Project Predictor AI.</p>
+    <div class="project-list">
+        {% for project in projects %}
+        <div class="project-card">
+            <div class="project-info">
+                <h3>{{ project.project_title }}</h3>
+                <p><strong>Type:</strong> {{ project.project_type|default:"N/A" }}</p>
+                <p><strong>Planned Budget:</strong> ${{ project.planned_budget|default:"N/A" }}</p>
+                <p><strong>Created:</strong> {{ project.created_at|date:"F d, Y"|default:"N/A" }}</p>
+            </div>
+            <div class="project-actions">
+                <a href="{% url 'project_detail' project.id %}" class="btn btn-outline">View Details</a>
+                <button class="btn btn-danger" onclick="openDeleteModal({{ project.id }}, '{{ project.project_title }}')">Delete</button>
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-projects">No projects found. Add a new project to get started!</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if projects.paginator.num_pages > 1 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if projects.has_previous %}
+                <a href="?page=1">« First</a>
+                <a href="?page={{ projects.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ projects.number }} of {{ projects.paginator.num_pages }}
+            </span>
+
+            {% if projects.has_next %}
+                <a href="?page={{ projects.next_page_number }}">Next</a>
+                <a href="?page={{ projects.paginator.num_pages }}">Last »</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>Confirm Deletion</h3>
+        <p>Are you sure you want to delete the project "<span id="projectTitle"></span>"? This action cannot be undone.</p>
+        <form id="deleteForm" method="POST" action="">
+            {% csrf_token %}
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-danger">OK</button>
+                <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h2 class="text-center mb-4">Register</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                <input type="text" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default_if_none:'' }}" class="form-control" placeholder="Enter username">
+                {% if form.username.errors %}
+                    {% for error in form.username.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                <input type="email" name="email" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default_if_none:'' }}" class="form-control" placeholder="Enter email">
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                <input type="text" name="first_name" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default_if_none:'' }}" class="form-control" placeholder="Enter first name">
+                {% if form.first_name.errors %}
+                    {% for error in form.first_name.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                <input type="text" name="last_name" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default_if_none:'' }}" class="form-control" placeholder="Enter last name">
+                {% if form.last_name.errors %}
+                    {% for error in form.last_name.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                <input type="text" name="phone_number" id="{{ form.phone_number.id_for_label }}" value="{{ form.phone_number.value|default_if_none:'' }}" class="form-control" placeholder="Enter phone number">
+                {% if form.phone_number.errors %}
+                    {% for error in form.phone_number.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.user_role.id_for_label }}">User Role (e.g., Project Manager, Developer)</label>
+                <input type="text" name="user_role" id="{{ form.user_role.id_for_label }}" value="{{ form.user_role.value|default_if_none:'' }}" class="form-control" placeholder="Enter user role">
+                {% if form.user_role.errors %}
+                    {% for error in form.user_role.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.organization_name.id_for_label }}">Organization Name</label>
+                <input type="text" name="organization_name" id="{{ form.organization_name.id_for_label }}" value="{{ form.organization_name.value|default_if_none:'' }}" class="form-control" placeholder="Enter organization name">
+                {% if form.organization_name.errors %}
+                    {% for error in form.organization_name.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                <input type="password" name="password1" id="{{ form.password1.id_for_label }}" class="form-control" placeholder="Enter password">
+                {% if form.password1.errors %}
+                    {% for error in form.password1.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                <input type="password" name="password2" id="{{ form.password2.id_for_label }}" class="form-control" placeholder="Confirm password">
+                {% if form.password2.errors %}
+                    {% for error in form.password2.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-gradient w-100">REGISTER</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

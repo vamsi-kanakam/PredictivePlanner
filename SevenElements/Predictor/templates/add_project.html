@@ -1,0 +1,449 @@
+{% extends 'base.html' %}
+{% block title %}Add New Project{% endblock %}
+{% block content %}
+<style>
+    .add-project {
+        max-width: 800px;
+        width: 100%;
+        padding: 40px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        animation: cardFadeIn 0.8s ease;
+    }
+    .add-project::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(107, 72, 255, 0.1), transparent);
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+    .add-project h2 {
+        font-size: 2.2rem;
+        color: #333333;
+        margin-bottom: 20px;
+        font-weight: 600;
+        position: relative;
+    }
+    .add-project h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #6b48ff, #48c6ef);
+        border-radius: 3px;
+    }
+    .add-project h3 {
+        font-size: 1.5rem;
+        color: #333333;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    .form-group {
+        margin-bottom: 25px;
+        text-align: left;
+    }
+    .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666666;
+        margin-bottom: 8px;
+        font-weight: 400;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        color: #333333;
+        transition: all 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #6b48ff;
+        box-shadow: 0 0 10px rgba(107, 72, 255, 0.2);
+        background: #ffffff;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #aaaaaa;
+    }
+    .error-message {
+        color: #ff3b30;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+    }
+    .btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(90deg, #6b48ff, #48c6ef);
+        border: none;
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+    .btn:hover::before {
+        left: 100%;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(107, 72, 255, 0.3);
+    }
+    @keyframes cardFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div class="add-project">
+    <h2>Add New Project</h2>
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Project Information -->
+        <h3>Project Information</h3>
+        <div class="form-group">
+            <label for="{{ form.project_title.id_for_label }}">Project Title</label>
+            {{ form.project_title }}
+            {% if form.project_title.errors %}
+                {% for error in form.project_title.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.project_description.id_for_label }}">Project Description</label>
+            {{ form.project_description }}
+            {% if form.project_description.errors %}
+                {% for error in form.project_description.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.project_type.id_for_label }}">Project Type</label>
+            {{ form.project_type }}
+            {% if form.project_type.errors %}
+                {% for error in form.project_type.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.planned_budget.id_for_label }}">Planned Budget</label>
+            {{ form.planned_budget }}
+            {% if form.planned_budget.errors %}
+                {% for error in form.planned_budget.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.planned_schedule.id_for_label }}">Planned Schedule (days)</label>
+            {{ form.planned_schedule }}
+            {% if form.planned_schedule.errors %}
+                {% for error in form.planned_schedule.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.planned_scope.id_for_label }}">Planned Scope</label>
+            {{ form.planned_scope }}
+            {% if form.planned_scope.errors %}
+                {% for error in form.planned_scope.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.project_manager_title.id_for_label }}">Project Manager Title</label>
+            {{ form.project_manager_title }}
+            {% if form.project_manager_title.errors %}
+                {% for error in form.project_manager_title.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.project_manager_skill_level.id_for_label }}">Project Manager Skill Level</label>
+            {{ form.project_manager_skill_level }}
+            {% if form.project_manager_skill_level.errors %}
+                {% for error in form.project_manager_skill_level.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Team Composition -->
+        <h3>Team Composition</h3>
+        <div class="form-group">
+            <label for="{{ form.team_size.id_for_label }}">Team Size</label>
+            {{ form.team_size }}
+            {% if form.team_size.errors %}
+                {% for error in form.team_size.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.avg_experience_level.id_for_label }}">Average Experience Level (years)</label>
+            {{ form.avg_experience_level }}
+            {% if form.avg_experience_level.errors %}
+                {% for error in form.avg_experience_level.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.senior_to_junior_ratio.id_for_label }}">Senior to Junior Ratio</label>
+            {{ form.senior_to_junior_ratio }}
+            {% if form.senior_to_junior_ratio.errors %}
+                {% for error in form.senior_to_junior_ratio.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Productivity Efficiency -->
+        <h3>Productivity Efficiency</h3>
+        <div class="form-group">
+            <label for="{{ form.expected_sprint_completion_rate.id_for_label }}">Expected Sprint Completion Rate (%)</label>
+            {{ form.expected_sprint_completion_rate }}
+            {% if form.expected_sprint_completion_rate.errors %}
+                {% for error in form.expected_sprint_completion_rate.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.task_completion_rate.id_for_label }}">Task Completion Rate (%)</label>
+            {{ form.task_completion_rate }}
+            {% if form.task_completion_rate.errors %}
+                {% for error in form.task_completion_rate.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.expected_velocity.id_for_label }}">Expected Velocity (story points)</label>
+            {{ form.expected_velocity }}
+            {% if form.expected_velocity.errors %}
+                {% for error in form.expected_velocity.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.estimated_cycle_time.id_for_label }}">Estimated Cycle Time (days)</label>
+            {{ form.estimated_cycle_time }}
+            {% if form.estimated_cycle_time.errors %}
+                {% for error in form.estimated_cycle_time.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.defect_rate.id_for_label }}">Defect Rate (per 1000 lines)</label>
+            {{ form.defect_rate }}
+            {% if form.defect_rate.errors %}
+                {% for error in form.defect_rate.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.dependencies_blocked.id_for_label }}">Dependencies Blocked</label>
+            {{ form.dependencies_blocked }}
+            {% if form.dependencies_blocked.errors %}
+                {% for error in form.dependencies_blocked.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Project Environment -->
+        <h3>Project Environment</h3>
+        <div class="form-group">
+            <label for="{{ form.leadership_support.id_for_label }}">Leadership Support (out of 10)</label>
+            {{ form.leadership_support }}
+            {% if form.leadership_support.errors %}
+                {% for error in form.leadership_support.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.team_collaboration_level.id_for_label }}">Team Collaboration Level (out of 10)</label>
+            {{ form.team_collaboration_level }}
+            {% if form.team_collaboration_level.errors %}
+                {% for error in form.team_collaboration_level.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.stakeholder_engagement.id_for_label }}">Stakeholder Engagement (out of 10)</label>
+            {{ form.stakeholder_engagement }}
+            {% if form.stakeholder_engagement.errors %}
+                {% for error in form.stakeholder_engagement.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.work_life_balance.id_for_label }}">Work-Life Balance (out of 10)</label>
+            {{ form.work_life_balance }}
+            {% if form.work_life_balance.errors %}
+                {% for error in form.work_life_balance.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.psychological_safety_score.id_for_label }}">Psychological Safety Score (out of 10)</label>
+            {{ form.psychological_safety_score }}
+            {% if form.psychological_safety_score.errors %}
+                {% for error in form.psychological_safety_score.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.resource_availability.id_for_label }}">Resource Availability (out of 10)</label>
+            {{ form.resource_availability }}
+            {% if form.resource_availability.errors %}
+                {% for error in form.resource_availability.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.turnover_rate.id_for_label }}">Turnover Rate (%)</label>
+            {{ form.turnover_rate }}
+            {% if form.turnover_rate.errors %}
+                {% for error in form.turnover_rate.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Technical Practices -->
+        <h3>Technical Practices</h3>
+        <div class="form-group">
+            <label for="{{ form.development_methodology.id_for_label }}">Development Methodology</label>
+            {{ form.development_methodology }}
+            {% if form.development_methodology.errors %}
+                {% for error in form.development_methodology.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.devops_adoption.id_for_label }}">DevOps Adoption (out of 10)</label>
+            {{ form.devops_adoption }}
+            {% if form.devops_adoption.errors %}
+                {% for error in form.devops_adoption.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.automated_testing_coverage.id_for_label }}">Automated Testing Coverage (%)</label>
+            {{ form.automated_testing_coverage }}
+            {% if form.automated_testing_coverage.errors %}
+                {% for error in form.automated_testing_coverage.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.cicd_pipeline_usage.id_for_label }}">CI/CD Pipeline Usage (out of 10)</label>
+            {{ form.cicd_pipeline_usage }}
+            {% if form.cicd_pipeline_usage.errors %}
+                {% for error in form.cicd_pipeline_usage.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.code_review_process.id_for_label }}">Code Review Process (out of 10)</label>
+            {{ form.code_review_process }}
+            {% if form.code_review_process.errors %}
+                {% for error in form.code_review_process.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.technical_debt_level.id_for_label }}">Technical Debt Level (out of 10)</label>
+            {{ form.technical_debt_level }}
+            {% if form.technical_debt_level.errors %}
+                {% for error in form.technical_debt_level.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.cloud_based_development.id_for_label }}">Cloud-Based Development</label>
+            {{ form.cloud_based_development }}
+            {% if form.cloud_based_development.errors %}
+                {% for error in form.cloud_based_development.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.security_practices.id_for_label }}">Security Practices (out of 10)</label>
+            {{ form.security_practices }}
+            {% if form.security_practices.errors %}
+                {% for error in form.security_practices.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn">Add Project</button>
+    </form>
+</div>
+{% endblock %}
