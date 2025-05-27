@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 DEBUG = False
 
 
-ALLOWED_HOSTS = ['.onrender.com', 'predictiveplanner.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -121,7 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 LOGIN_URL = '/login/'
@@ -135,3 +135,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+SECURE_SSL_REDIRECT = False

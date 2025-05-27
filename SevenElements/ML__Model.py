@@ -7,8 +7,8 @@ import xgboost as xgb
 
 def ML_Model():
     # Load datasets
-    train_data = pd.read_csv('projects_dataset_250.csv')
-    test_data = pd.read_csv('test_dataset.csv')  # Read all rows
+    train_data = pd.read_csv('./projects_dataset_250.csv')
+    test_data = pd.read_csv('./test_dataset.csv')  # Read all rows
 
     # Define features available in both datasets (excluding actual values, scores, and success)
     features = [
@@ -112,7 +112,7 @@ def ML_Model():
         test_data.insert(len(test_data.columns), 'Predicted Project Success', y_pred_success)
 
     # Save back to the same file
-    test_data.to_csv('test_dataset.csv', index=False)
+    test_data.to_csv('./test_dataset.csv', index=False)
 
     print("Updated test_dataset.csv with predicted values.")
 
@@ -124,7 +124,7 @@ def ML_Model():
     # returning scores
 
     # 1. Construct the full path to the CSV file
-    file_path = 'test_dataset.csv'
+    file_path = './test_dataset.csv'
     
     # 2. Read the CSV file into a pandas DataFrame
     df = pd.read_csv(file_path)
